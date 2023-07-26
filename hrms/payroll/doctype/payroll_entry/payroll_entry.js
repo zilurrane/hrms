@@ -209,10 +209,9 @@ frappe.ui.form.on('Payroll Entry', {
 
 	get_employee_filters: function (frm) {
 		let filters = {};
-		filters['salary_slip_based_on_timesheet'] = frm.doc.salary_slip_based_on_timesheet;
 
 		let fields = ['company', 'start_date', 'end_date', 'payroll_frequency', 'payroll_payable_account',
-			'currency', 'department', 'branch', 'designation'];
+			'currency', 'department', 'branch', 'designation', 'salary_slip_based_on_timesheet'];
 
 		fields.forEach(field => {
 			if (frm.doc[field]) {
@@ -308,6 +307,7 @@ frappe.ui.form.on('Payroll Entry', {
 
 	salary_slip_based_on_timesheet: function (frm) {
 		frm.toggle_reqd(['payroll_frequency'], !frm.doc.salary_slip_based_on_timesheet);
+		hrms.set_payroll_frequency_to_null(frm);
 	},
 
 	set_start_end_dates: function (frm) {
@@ -347,7 +347,7 @@ frappe.ui.form.on('Payroll Entry', {
 	validate_attendance: function (frm) {
 		if (frm.doc.validate_attendance && (frm.doc.employees?.length > 0)) {
 			frappe.call({
-				method: 'get_employees_to_mark_attendance',
+				method: 'get_employees_with_unmarked_attendance',
 				args: {},
 				callback: function (r) {
 					render_employee_attendance(frm, r.message);
@@ -421,7 +421,7 @@ let make_bank_entry = function (frm) {
 
 let render_employee_attendance = function (frm, data) {
 	frm.fields_dict.attendance_detail_html.html(
-		frappe.render_template('employees_to_mark_attendance', {
+		frappe.render_template('employees_with_unmarked_attendance', {
 			data: data
 		})
 	);
