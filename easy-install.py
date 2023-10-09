@@ -52,7 +52,7 @@ def clone_hrms_docker_repo() -> None:
 		unpack_archive(
 			"hrms_docker.zip", "."
 		)  # Unzipping the hrms_docker.zip creates a folder "hrms_docker-main"
-		move("hrms_docker-main", "hrms_docker")
+		move("hrms-main", "hrms_docker")
 		logging.info("Unzipped and Renamed hrms_docker")
 		os.remove("hrms_docker.zip")
 		logging.info("Removed the downloaded zip file")
